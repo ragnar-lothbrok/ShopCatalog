@@ -6,3 +6,4 @@ Steps to deploy
 4. Post ajax call is used.
 5. You can search by typing 1,2,3 to 49.
 6. sessionstorage is used so when we will close tab data will not be in cache.If you want to keep data if tab is closed then you can add data in localstorage.
+7. http://localhost:8080/CatalogDemo/
