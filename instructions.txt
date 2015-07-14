@@ -1,0 +1,8 @@
+Steps to deploy
+
+1. mvn clean install -DskipTests
+2. deploy CatalogDemo.war in tomcat
+3. I have assumed that if in search we don't get any data then I won't cache it and previous data will be shown when we do refresh.
+4. Post ajax call is used.
+5. You can search by typing 1,2,3 to 49.
+6. sessionstorage is used so when we will close tab data will not be in cache.If you want to keep data if tab is closed then you can add data in localstorage.

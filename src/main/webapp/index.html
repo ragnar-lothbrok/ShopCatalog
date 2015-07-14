@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Catalog Search Page</title>
+<script
+	src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script>
+	$(document)
+			.ready(
+					function() {
+						var isFormSubmit = false;
+						var cachedData = JSON.parse(sessionStorage.getItem('data'));
+						var cachedSearchText = sessionStorage.getItem('searchText');
+						if (isFormSubmit == false && cachedData != null) {
+							if (cachedSearchText != null) {
+								document.getElementById('searchText').value = cachedSearchText;
+							}
+							display(cachedData);
+						}
+						
+						$('form')
+						.submit(
+								function(event) {
+									isFormSubmit = true;
+									var searchText = document
+											.getElementById('searchText').value;
+									if (searchText == null
+											|| searchText.length == 0) {
+										alert('Please enter seach text.');
+										return false;
+									}
+									var url = "/CatalogDemo/services/catalogServices/product";
+									$
+											.ajax(
+													{
+														type : 'POST',
+														url : url,
+														data : searchText,
+														contentType : "text/plain",
+														encode : true
+													})
+											.done(
+													function(data) {
+														if(data.length > 0){
+															//sessionStorage.setItem(searchText, JSON.stringify(data));
+															sessionStorage.setItem('data', JSON.stringify(data));
+															sessionStorage.setItem('searchText', searchText);
+														}
+														display(data);
+													});
+									event.preventDefault();
+								});
+						
+					});
+	
+	function display(data){
+		var htmlContent = "";
+		if (data.length > 0) {
+			htmlContent += "<table align='center' border='1' style='margin-top: 20px'><tr><th>CatalogId</th><th>CatalogName</th><th>CatalogDesc</th><th>CatalogPrice</th></tr>";
+			for (var i = 0; i < data.length; i++) {
+				htmlContent += "<tr><td>"
+						+ data[i].catalogId
+						+ "</td><td>"
+						+ data[i].catalogName
+						+ "</td><td>"
+						+ data[i].catalogDesc
+						+ "</td><td>"
+						+ data[i].price
+						+ "</td></tr>";
+			}
+			htmlContent += "</table>";
+			document
+					.getElementById('renderSearch').innerHTML = htmlContent;
+		} else {
+			document
+					.getElementById('renderSearch').innerHTML = '<span style="color: red">No Data Found<span>';
+		}
+	}
+</script>
+</head>
+<body>
+	<h3 align="center">Search your catalog here...</h3>
+	<form method="post" action="" name="catalogForm">
+		<table align="center">
+			<thead>
+				<th></th>
+			</thead>
+			<tr>
+				<td style="font-weight: bold;">Search :</td>
+				<td><input type="text" name="searchText" id="searchText" /></td>
+				<td><input type="submit" value="Search" /></td>
+			</tr>
+		</table>
+	</form>
+	<div align="center" id="renderSearch"></div>
+</body>
+</html>
